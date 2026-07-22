@@ -1,0 +1,25 @@
+[
+  {
+    "doctype": "Notification",
+    "name": "Loan Schedule Payment Due Alert",
+    "enabled": 0,
+    "subject": "Loan Payment Due: {{ doc.parent }} – {{ doc.due_date }}",
+    "document_type": "Bank Loan Schedule Line",
+    "event": "Days After",
+    "days_in_advance": 0,
+    "date_changed": "due_date",
+    "condition": "doc.status == \"Pending\"",
+    "channel": "Email",
+    "recipients": [
+      {
+        "doctype": "Notification Recipient",
+        "receiver_by_role": "Accounts Manager"
+      },
+      {
+        "doctype": "Notification Recipient",
+        "receiver_by_role": "Accounts User"
+      }
+    ],
+    "message": "<p>A loan repayment is due but no Journal Entry has been posted.</p>\n<table style=\"border-collapse:collapse;width:100%;font-size:13px;\">\n  <tr style=\"background:#f3f4f6;\">\n    <th style=\"padding:8px 10px;text-align:left;\">Field</th>\n    <th style=\"padding:8px 10px;text-align:left;\">Value</th>\n  </tr>\n  <tr><td style=\"padding:6px 10px;\">Schedule</td><td style=\"padding:6px 10px;\">{{ doc.parent }}</td></tr>\n  <tr><td style=\"padding:6px 10px;\">Due Date</td><td style=\"padding:6px 10px;\">{{ doc.due_date }}</td></tr>\n  <tr><td style=\"padding:6px 10px;\">Total Payment</td><td style=\"padding:6px 10px;\">{{ doc.total_payment }}</td></tr>\n  <tr><td style=\"padding:6px 10px;\">Principal</td><td style=\"padding:6px 10px;\">{{ doc.principal_amount }}</td></tr>\n  <tr><td style=\"padding:6px 10px;\">Interest</td><td style=\"padding:6px 10px;\">{{ doc.interest_amount }}</td></tr>\n  <tr><td style=\"padding:6px 10px;\">Outstanding After</td><td style=\"padding:6px 10px;\">{{ doc.outstanding_amount }}</td></tr>\n</table>"
+  }
+]

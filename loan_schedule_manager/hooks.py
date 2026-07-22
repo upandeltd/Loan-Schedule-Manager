@@ -17,7 +17,6 @@ doc_events = {
 scheduler_events = {
     "daily": [
         "loan_schedule_manager.scheduler.tasks.create_due_loan_journal_entries",
-        "loan_schedule_manager.scheduler.notifications.send_overdue_alerts",
     ]
 }
 
@@ -30,5 +29,9 @@ fixtures = [
     {
         "dt": "Web Page",
         "filters": [["module", "=", "Loan Schedule Manager"]]
+    },
+    {
+        "dt": "Notification",
+        "filters": [["name", "=", "Loan Schedule Payment Due Alert"]]
     }
 ]
