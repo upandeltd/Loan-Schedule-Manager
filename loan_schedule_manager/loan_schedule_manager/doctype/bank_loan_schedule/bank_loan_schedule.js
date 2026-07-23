@@ -26,9 +26,10 @@ frappe.ui.form.on("Bank Loan Schedule", {
         frm.dashboard.clear_headline();
 
         const lines    = frm.doc.schedule_lines || [];
-        const posted   = lines.filter(l => l.status === "Posted").length;
-        const pending  = lines.filter(l => l.status === "Pending").length;
         const adjusted = lines.filter(l => l.status === "Adjusted").length;
+        // Adjusted lines are actual postings — count them with Posted
+        const posted   = lines.filter(l => l.status === "Posted" || l.status === "Adjusted").length;
+        const pending  = lines.filter(l => l.status === "Pending").length;
         const total    = lines.length;
         const pct      = total ? Math.round((posted / total) * 100) : 0;
 

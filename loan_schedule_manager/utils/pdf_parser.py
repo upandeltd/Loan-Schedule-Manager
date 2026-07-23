@@ -87,6 +87,7 @@ def parse_schedule_pdf(file_path: str) -> dict:
 
     _parse_header(full_text, result)
     _parse_lines(clean_lines, result)
+    _compute_running_balance(result)
 
     return result
 
@@ -179,10 +180,37 @@ def _parse_lines(lines: list, result: dict):
 
         result["schedule_lines"].append({
             "due_date":           parsed_date,
-            "total_payment":      total_payment,
+            "total_payment":      total_payment,   # overwritten by _compute_running_balance
             "principal_amount":   principal,
             "interest_amount":    interest,
-            "outstanding_amount": outstanding,
+            "outstanding_amount": outstanding,     # overwritten by _compute_running_balance
         })
 
         i += 1
+
+
+def _compute_running_balance(result: dict):
+    """
+    Post-process parsed lines to:
+      1. Set outstanding_amount as a true running balance
+         (disbursement_amount − cumulative principal paid).
+      2. Set total_payment = principal_amount + interest_amount
+         (more reliable than the parsed column value).
+    """
+    lines = result.get("schedule_lines", [])
+    if not lines:
+        return
+
+    balance = result.get("disbursement_amount") or 0.0
+
+    # Fallback when disbursement amount is missing from the PDF header
+    if not balance:
+        first = lines[0]
+        balance = first["outstanding_amount"] + first["principal_amount"]
+
+    for line in lines:
+        balance = round(balance - line["principal_amount"], 2)
+        line["outstanding_amount"] = max(balance, 0.0)
+        line["total_payment"] = round(
+            line["principal_amount"] + line["interest_amount"], 2
+        )

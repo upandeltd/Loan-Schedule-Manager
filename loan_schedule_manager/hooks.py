@@ -13,13 +13,6 @@ doc_events = {
     }
 }
 
-# Scheduler Events
-scheduler_events = {
-    "daily": [
-        "loan_schedule_manager.scheduler.tasks.create_due_loan_journal_entries",
-    ]
-}
-
 # Fixtures - export these DocTypes when running bench export-fixtures
 fixtures = [
     {
@@ -32,6 +25,9 @@ fixtures = [
     },
     {
         "dt": "Notification",
-        "filters": [["name", "=", "Loan Schedule Payment Due Alert"]]
+        "filters": [["name", "in", [
+            "Loan Schedule Payment Due Alert",
+            "Loan Repayment Posting Reminder",
+        ]]]
     }
 ]
